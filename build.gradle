@@ -1,0 +1,25 @@
+apply plugin: 'java'
+
+apply plugin: 'eclipse'
+eclipse.classpath.downloadJavadoc = true
+eclipse.classpath.downloadSources = false
+tasks.eclipse {
+  doLast {
+    'D:\\Program_Files\\eSpeak\\command_line\\espeak.exe eclipse'.execute()
+  }
+}
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  compile 'org.glassfish.jersey.core:jersey-client:2.0.1'
+  testCompile 'junit:junit:4.12'
+}
+
+tasks.withType(Test) {
+  outputs.upToDateWhen {false}
+  testLogging.showStandardStreams = true
+  testLogging.exceptionFormat = 'full'
+}
