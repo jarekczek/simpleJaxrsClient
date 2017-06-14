@@ -11,6 +11,7 @@ import org.junit.Test;
 public class Tests
 {
   Logger logger;
+  public final String url = "http://localhost:8080/jpkok/test";
 
   public Tests()
   {
@@ -27,31 +28,38 @@ public class Tests
     System.out.println("average: " + (double)t / cTimes);
   }
   
-  @Test
+  //@Test
   public void newClient()
   {
     logger.info("Calling with new client...");
-    measure(3, () -> {
+    Runnable fun = () -> {
       Response resp = ClientBuilder.newClient()
-      .target("http://localhost:8083")
+      .target(url)
       .request()
       .get();
       //String respText = resp.readEntity(String.class);
       //System.out.println("resp: " + respText);
-    });
+    };
+    measure(1, fun);
+    measure(20, fun);
   }
 
   @Test
   public void sameClient()
   {
     logger.info("Calling with same client...");
-    measure(3, () -> {
-      Builder req = ClientBuilder.newClient()
-          .target("http://localhost:8083")
-          .request();
+    long t0 = System.currentTimeMillis();
+    Builder req = ClientBuilder.newClient()
+        .target(url)
+        .request();
+    long t = System.currentTimeMillis() - t0;
+    System.out.println("request built: " + t);
+    Runnable fun = () -> {
       Response resp = req.get();
       //String respText = resp.readEntity(String.class);
       //System.out.println("resp: " + respText);
-    });
+    }; 
+    measure(1, fun);
+    measure(20, fun);
   }
 }
