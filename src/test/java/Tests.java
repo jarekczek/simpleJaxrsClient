@@ -37,8 +37,10 @@ public class Tests
       .target(url)
       .request()
       .get();
+      // Must read the response or close to enable keep-alive.
       //String respText = resp.readEntity(String.class);
       //System.out.println("resp: " + respText);
+      resp.close();
     };
     measure(1, fun);
     measure(20, fun);
@@ -56,10 +58,12 @@ public class Tests
     System.out.println("request built: " + t);
     Runnable fun = () -> {
       Response resp = req.get();
+       // Must read the response or close to enable keep-alive.
       //String respText = resp.readEntity(String.class);
       //System.out.println("resp: " + respText);
+      resp.close();
     }; 
     measure(1, fun);
-    measure(20, fun);
+    measure(50, fun);
   }
 }
